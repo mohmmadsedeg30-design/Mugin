@@ -1,6 +1,7 @@
 import pytest
 
 from mugin.core import PolicyError, review_security_headers, validate_target
+from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
 def test_loopback_allowed():
@@ -36,3 +37,13 @@ def test_security_header_review_accepts_recommended_headers():
     }
     findings = review_security_headers(headers)
     assert findings[0].severity == "info"
+
+
+def test_numbered_ui_and_disclaimer_are_english_and_safe(capsys):
+    assert len(MENU_OPTIONS) == 8
+    assert "SAFE ETHICAL LAB" in BANNER
+    print_disclaimer()
+    output = capsys.readouterr().out
+    assert "credential" in output.lower()
+    assert "phishing" in output.lower()
+    assert not any("\u0600" <= character <= "\u06ff" for character in output)

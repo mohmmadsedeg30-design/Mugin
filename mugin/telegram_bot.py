@@ -1,22 +1,22 @@
-"""Telegram adapter skeleton.
+"""Restricted Telegram adapter skeleton.
 
-This module intentionally does not execute arbitrary shell commands. Add the
-BOT_TOKEN only as a GitHub Actions secret or runtime environment variable.
+This module intentionally does not execute arbitrary shell commands. Store
+TELEGRAM_BOT_TOKEN only as a runtime environment variable or a CI secret.
 """
 from __future__ import annotations
 
 import os
 
 ALLOWED_COMMANDS = {
-    "/start": "عرض القائمة",
-    "/list": "عرض التحديات المتاحة",
-    "/policy": "عرض سياسة النطاق",
-    "/dryrun": "تشغيل محاكاة على هدف محلي فقط",
+    "/start": "Show the menu",
+    "/list": "List available challenges",
+    "/policy": "Show the scope policy",
+    "/dryrun": "Run a simulation on a local target only",
 }
 
 
 def command_menu() -> list[str]:
-    return [f"{command} — {description}" for command, description in ALLOWED_COMMANDS.items()]
+    return [f"{command} - {description}" for command, description in ALLOWED_COMMANDS.items()]
 
 
 def is_authorized(user_id: int, owner_ids: set[int]) -> bool:

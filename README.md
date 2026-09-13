@@ -1,60 +1,62 @@
 # Mugin
 
-منصة تعليمية لاختبارات الأمن السيبراني الأخلاقية داخل مختبرات معزولة ومصرّح بها.
+Mugin is a defensive cybersecurity learning tool for isolated, authorized laboratories.
 
-> **نطاق الاستخدام:** شغّل Mugin فقط على الأنظمة التي تملكها أو لديك تفويض مكتوب لاختبارها. الوضع الافتراضي هو المحاكاة، ولا توجد وظائف لاستهداف الإنترنت العام أو تجاوز المصادقة أو سرقة البيانات.
+> **Scope:** Use Mugin only on systems you own or are explicitly authorized to test. The default mode is simulation. Mugin does not provide phishing pages, credential collection, authentication bypass, malware, persistence, stealth, or public-target scanning.
 
-## المكونات
+## Safe alternative to phishing toolkits
 
-1. **Policy Gate**: يتحقق من أن الهدف محلي أو موجود في قائمة السماح.
-2. **Lab Manager**: يعرّف مختبرات تعليمية قابلة لإعادة الإنشاء.
-3. **Safe Checks**: فحوصات دفاعية منخفضة التأثير مثل تحليل الرؤوس، TLS، والإعدادات.
-4. **Challenge Catalog**: تحديات CTF محلية مع أهداف ونتائج متوقعة.
-5. **Telegram Adapter**: واجهة مستقبلية مقيدة بالصلاحيات وسجل التدقيق.
-6. **Reports**: تقارير JSON قابلة للمراجعة.
+Mugin is intentionally **not** a clone of `zphisher.sh` or any phishing toolkit. It provides safe training workflows instead: local policy validation, offline security-header review, JSON reporting, and educational challenges using synthetic data. It must never be used to impersonate a service, harvest credentials, or send deceptive messages.
 
-## التشغيل
+## Features
+
+1. **Policy Gate:** Allows loopback, private, and link-local lab targets only, or an explicit allow-list.
+2. **Safe Checks:** Runs low-impact defensive checks in dry-run mode.
+3. **Challenge Catalog:** Provides local educational challenges with documented scope.
+4. **Offline Header Review:** Reviews supplied HTTP headers without making network requests or storing header values.
+5. **Numbered English UI:** A simple ASCII-logo menu for local operation.
+6. **Restricted Telegram Adapter:** A skeleton only; it does not execute arbitrary commands or expose secrets.
+7. **Reports:** Creates local JSON reports for review.
+
+## Installation
 
 ```bash
-python3 -m mugin.cli list
-python3 -m mugin.cli check --target http://127.0.0.1:8080 --dry-run
-python3 -m pytest -q
+git clone https://github.com/mohmmadsedeg30-design/Mugin.git
+cd Mugin
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install pytest
 ```
 
-## قائمة الأوامر
-
-1. `list` — عرض الفحوصات والتحديات المتاحة.
-2. `check` — تشغيل فحص آمن على هدف مسموح.
-3. `policy` — عرض سياسة النطاق.
-4. `report` — تحويل نتيجة إلى تقرير JSON.
-
-## المختبرات
-
-يجب تشغيل المختبرات محلياً أو في شبكة اختبار منفصلة. لا يُسمح بإضافة أهداف عامة إلى ملفات التحديات أو الاختبارات.
-
-## الإضافات اليومية
-
-يُضاف تحدٍّ أو تحسين موثق يومياً عبر عملية مراجعة واختبارات تلقائية. لا تُحفظ الرموز السرية أو مفاتيح Telegram في المستودع؛ استخدم Secrets في GitHub عند إضافة البوت.
-
-## الترخيص
-
-للاستخدام التعليمي والاختبار المصرّح به فقط. راجع `docs/safety.md`.
-
-## الواجهة التفاعلية بالأرقام
-
-بعد تثبيت المشروع، شغّل القائمة التفاعلية بهذا الأمر الوحيد:
+## Run
 
 ```bash
 python3 mugin.py
 ```
 
-ستظهر لك خيارات مرقمة:
+The numbered menu includes challenges, policy information, local dry-run checks, local JSON reports, offline header review, Telegram adapter status, and the safety disclaimer.
 
-1. عرض التحديات التعليمية.
-2. عرض سياسة الأمان والنطاق.
-3. فحص هدف محلي في وضع المحاكاة.
-4. إنشاء تقرير فحص JSON.
-5. عرض حالة النظام.
-6. خروج.
+Command-line examples:
 
-بعد التشغيل لا تحتاج إلى كتابة أوامر Mugin أخرى؛ اختر الرقم من القائمة واتبع الأسئلة الظاهرة. لا تقبل القائمة إلا الأهداف المحلية أو الخاصة المصرح بها، وترفض الأهداف العامة تلقائياً.
+```bash
+python3 -m mugin.cli list
+python3 -m mugin.cli policy
+python3 -m mugin.cli check --target http://127.0.0.1:8080 --dry-run
+```
+
+## Tests
+
+```bash
+python -m pytest -q
+```
+
+## Telegram adapter
+
+`mugin/telegram_bot.py` is a safe adapter skeleton. It reads `TELEGRAM_BOT_TOKEN` only from the runtime environment and never stores the value in the repository. No real bot polling or webhook service is enabled by default.
+
+## Disclaimer
+
+This project is for authorized defensive education only. Do not use it to create fake login pages, collect passwords or tokens, bypass authentication, scan public systems, deliver malware, establish persistence, evade detection, or disrupt services. The operator is responsible for authorization, isolation, data protection, and compliance with applicable law.
+
+See [docs/safety.md](docs/safety.md) for the complete safety charter.
