@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from ipaddress import ip_address
 from urllib.parse import urlparse
+from collections.abc import Mapping
 
 
 @dataclass(frozen=True)
@@ -44,3 +45,23 @@ def policy_summary() -> dict:
             "credential theft", "auth bypass", "persistence", "malware", "public scanning"
         ],
     }
+
+
+def review_security_headers(headers: Mapping[str, str]) -> list[Finding]:
+    """Review supplied headers without making network requests or exposing values."""
+    normalized = {str(name).lower(): str(value).strip() for name, value in headers.items()}
+    checks = {
+        "content-security-policy": "Add a restrictive Content-Security-Policy for the lab application",
+        "x-content-type-options": "Set X-Content-Type-Options to nosniff",
+        "referrer-policy": "Set an explicit, privacy-preserving Referrer-Policy",
+        "permissions-policy": "Restrict unused browser capabilities with Permissions-Policy",
+    }
+    findings: list[Finding] = []
+    for header, remediation in checks.items():
+        if not normalized.get(header):
+            findings.append(Finding("security-headers", "medium", f"Missing {header}", remediation=remediation))
+    if normalized.get("x-content-type-options", "").lower() != "nosniff":
+        findings.append(Finding("security-headers", "low", "X-Content-Type-Options is not set to nosniff"))
+    if not findings:
+        findings.append(Finding("security-headers", "info", "Recommended defensive headers are present"))
+    return findings

@@ -10,6 +10,7 @@ CHALLENGES = [
     {"id": "web-001", "title": "Secure Headers", "level": "beginner", "scope": "local"},
     {"id": "web-002", "title": "Cookie Flags Review", "level": "beginner", "scope": "local"},
     {"id": "config-001", "title": "Secret-Free Repository", "level": "beginner", "scope": "local"},
+    {"id": "web-003", "title": "Defensive Security Headers", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 
