@@ -22,7 +22,7 @@ def validate_target(target: str, allowed_hosts: set[str] | None = None) -> str:
     """Allow loopback/private lab hosts or an explicit host allow-list."""
     parsed = urlparse(target)
     if parsed.scheme not in {"http", "https"} or not parsed.hostname:
-        raise PolicyError("الهدف يجب أن يكون رابط HTTP/HTTPS صالحاً")
+        raise PolicyError("Target must be a valid HTTP/HTTPS URL")
     host = parsed.hostname.lower()
     allowed_hosts = {h.lower() for h in (allowed_hosts or set())}
     try:
@@ -31,7 +31,7 @@ def validate_target(target: str, allowed_hosts: set[str] | None = None) -> str:
     except ValueError:
         safe_network = host in {"localhost", "host.docker.internal"} or host in allowed_hosts
     if not safe_network:
-        raise PolicyError("الهدف خارج نطاق المختبر أو قائمة السماح")
+        raise PolicyError("Target is outside the lab scope or explicit allow-list")
     return target
 
 

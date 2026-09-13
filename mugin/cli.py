@@ -16,11 +16,11 @@ CHALLENGES = [
 def safe_check(target: str, dry_run: bool = True) -> list[Finding]:
     validate_target(target)
     host = urlparse(target).hostname or ""
-    findings = [Finding("scope", "info", "الهدف اجتاز سياسة النطاق", host)]
+    findings = [Finding("scope", "info", "Target passed the scope policy", host)]
     if dry_run:
-        findings.append(Finding("execution", "info", "تم تشغيل المحاكاة دون إرسال طلبات مؤثرة"))
+        findings.append(Finding("execution", "info", "Simulation mode: no impactful requests were sent"))
     if urlparse(target).scheme != "https":
-        findings.append(Finding("transport", "medium", "المختبر يستخدم HTTP؛ استخدم HTTPS خارج بيئة التدريب", remediation="فعّل TLS وتحقق من الشهادة"))
+        findings.append(Finding("transport", "medium", "Lab uses HTTP; use HTTPS outside training", remediation="Enable TLS and verify the certificate"))
     return findings
 
 
