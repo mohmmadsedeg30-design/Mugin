@@ -18,3 +18,7 @@ The operator is solely responsible for obtaining authorization, isolating the la
 ## Daily challenge: Defensive Security Headers
 
 This challenge reviews a learner-supplied mapping of HTTP response headers from a local lab. It makes no network requests and does not print or persist header values. It checks for `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, and `Permissions-Policy`, then provides low-impact remediation guidance. Use synthetic data or data from a lab you own. Never include session tokens, API keys, passwords, or other secrets.
+
+## Daily challenge: Cookie Flags Review
+
+This challenge reviews learner-supplied, synthetic `Set-Cookie` lines entirely offline. It checks only for the presence of `Secure`, `HttpOnly`, and `SameSite` attributes, never makes a network request, and never includes cookie names or values in findings. Use placeholder values in an isolated lab; do not paste real session cookies, tokens, or credentials.

@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_security_headers, validate_target
+from mugin.core import PolicyError, review_cookie_flags, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -36,6 +36,20 @@ def test_security_header_review_accepts_recommended_headers():
         "Permissions-Policy": "camera=(), microphone=()",
     }
     findings = review_security_headers(headers)
+    assert findings[0].severity == "info"
+
+
+def test_cookie_flag_review_reports_missing_attributes_without_cookie_values():
+    findings = review_cookie_flags(["session=synthetic; Path=/"])
+    messages = " ".join(finding.message for finding in findings)
+    assert "Secure" in messages
+    assert "HttpOnly" in messages
+    assert "SameSite" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_cookie_flag_review_accepts_synthetic_cookie_with_recommended_attributes():
+    findings = review_cookie_flags(["training=synthetic; Secure; HttpOnly; SameSite=Lax"])
     assert findings[0].severity == "info"
 
 

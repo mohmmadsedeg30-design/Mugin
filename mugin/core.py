@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from ipaddress import ip_address
 from urllib.parse import urlparse
-from collections.abc import Mapping
 
 
 @dataclass(frozen=True)
@@ -41,9 +41,7 @@ def policy_summary() -> dict:
         "default_mode": "dry-run",
         "allowed_networks": ["loopback", "private", "link-local"],
         "requires_explicit_allowlist_for_domains": True,
-        "forbidden": [
-            "credential theft", "auth bypass", "persistence", "malware", "public scanning"
-        ],
+        "forbidden": ["credential theft", "auth bypass", "persistence", "malware", "public scanning"],
     }
 
 
@@ -65,3 +63,29 @@ def review_security_headers(headers: Mapping[str, str]) -> list[Finding]:
     if not findings:
         findings.append(Finding("security-headers", "info", "Recommended defensive headers are present"))
     return findings
+
+
+def review_cookie_flags(cookie_headers: Iterable[str]) -> list[Finding]:
+    """Review local synthetic Set-Cookie lines without exposing cookie values."""
+    findings: list[Finding] = []
+    checked = 0
+    for raw_header in cookie_headers:
+        header = str(raw_header).strip()
+        if not header:
+            continue
+        checked += 1
+        attributes = {part.strip().split("=", 1)[0].lower() for part in header.split(";")[1:]}
+        if "secure" not in attributes:
+            findings.append(Finding("cookie-flags", "medium", "Cookie is missing Secure", remediation="Set Secure for HTTPS lab cookies"))
+        if "httponly" not in attributes:
+            findings.append(Finding("cookie-flags", "medium", "Cookie is missing HttpOnly", remediation="Set HttpOnly when client-side scripts do not need access"))
+        if "samesite" not in attributes:
+            findings.append(Finding("cookie-flags", "low", "Cookie is missing SameSite", remediation="Set SameSite=Lax or Strict according to the lab flow"))
+    if checked == 0:
+        return [Finding("cookie-flags", "info", "No cookie lines supplied; nothing was inspected")]
+    if not findings:
+        findings.append(Finding("cookie-flags", "info", "Supplied cookies include Secure, HttpOnly, and SameSite attributes"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_cookie_flags", "review_security_headers", "validate_target"]
