@@ -22,3 +22,7 @@ This challenge reviews a learner-supplied mapping of HTTP response headers from 
 ## Daily challenge: Cookie Flags Review
 
 This challenge reviews learner-supplied, synthetic `Set-Cookie` lines entirely offline. It checks only for the presence of `Secure`, `HttpOnly`, and `SameSite` attributes, never makes a network request, and never includes cookie names or values in findings. Use placeholder values in an isolated lab; do not paste real session cookies, tokens, or credentials.
+
+## Daily challenge: Authentication Policy Review
+
+This challenge reviews a small mapping of synthetic policy settings entirely offline: minimum password length, whether multi-factor authentication is required, and the account lockout threshold. It never accepts, compares, logs, or stores passwords, tokens, usernames, or other credentials. Use only placeholder configuration values from an isolated lab.

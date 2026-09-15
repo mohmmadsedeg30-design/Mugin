@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_cookie_flags, review_security_headers, validate_target
+from mugin.core import PolicyError, review_authentication_policy, review_cookie_flags, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -50,6 +50,20 @@ def test_cookie_flag_review_reports_missing_attributes_without_cookie_values():
 
 def test_cookie_flag_review_accepts_synthetic_cookie_with_recommended_attributes():
     findings = review_cookie_flags(["training=synthetic; Secure; HttpOnly; SameSite=Lax"])
+    assert findings[0].severity == "info"
+
+
+def test_authentication_policy_review_reports_weak_synthetic_settings_without_secrets():
+    findings = review_authentication_policy({"minimum_password_length": 8, "mfa_required": False, "lockout_threshold": 20})
+    messages = " ".join(finding.message for finding in findings)
+    assert "12 characters" in messages
+    assert "Multi-factor" in messages
+    assert "3-10" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_authentication_policy_review_accepts_baseline_settings():
+    findings = review_authentication_policy({"minimum_password_length": 14, "mfa_required": True, "lockout_threshold": 5})
     assert findings[0].severity == "info"
 
 

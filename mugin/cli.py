@@ -11,6 +11,7 @@ CHALLENGES = [
     {"id": "web-002", "title": "Cookie Flags Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "config-001", "title": "Secret-Free Repository", "level": "beginner", "scope": "local"},
     {"id": "web-003", "title": "Defensive Security Headers", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "auth-001", "title": "Authentication Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 

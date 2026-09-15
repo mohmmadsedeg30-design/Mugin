@@ -88,4 +88,20 @@ def review_cookie_flags(cookie_headers: Iterable[str]) -> list[Finding]:
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_cookie_flags", "review_security_headers", "validate_target"]
+def review_authentication_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic authentication settings without receiving passwords or tokens."""
+    findings: list[Finding] = []
+    minimum_length = settings.get("minimum_password_length")
+    if not isinstance(minimum_length, int) or minimum_length < 12:
+        findings.append(Finding("authentication-policy", "medium", "Password minimum length is below 12 characters", remediation="Require at least 12 characters and prefer passphrases"))
+    if settings.get("mfa_required") is not True:
+        findings.append(Finding("authentication-policy", "medium", "Multi-factor authentication is not required", remediation="Require MFA for privileged and sensitive lab accounts"))
+    lockout_threshold = settings.get("lockout_threshold")
+    if not isinstance(lockout_threshold, int) or not 3 <= lockout_threshold <= 10:
+        findings.append(Finding("authentication-policy", "low", "Account lockout threshold is missing or outside the 3-10 range", remediation="Use a bounded threshold and pair it with rate limiting"))
+    if not findings:
+        findings.append(Finding("authentication-policy", "info", "Synthetic authentication settings meet baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_authentication_policy", "review_cookie_flags", "review_security_headers", "validate_target"]
