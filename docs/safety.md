@@ -26,3 +26,7 @@ This challenge reviews learner-supplied, synthetic `Set-Cookie` lines entirely o
 ## Daily challenge: Authentication Policy Review
 
 This challenge reviews a small mapping of synthetic policy settings entirely offline: minimum password length, whether multi-factor authentication is required, and the account lockout threshold. It never accepts, compares, logs, or stores passwords, tokens, usernames, or other credentials. Use only placeholder configuration values from an isolated lab.
+
+## Daily challenge: CORS Policy Review
+
+This challenge reviews synthetic CORS settings entirely offline. It checks whether a wildcard origin is used, especially alongside credentialed requests, and recommends an explicit origin for a local lab. It makes no network requests, does not inspect browser traffic, and never accepts cookies, tokens, or credentials. Use placeholder values only and keep the lab isolated.

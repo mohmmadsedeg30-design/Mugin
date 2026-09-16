@@ -104,4 +104,24 @@ def review_authentication_policy(settings: Mapping[str, object]) -> list[Finding
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_authentication_policy", "review_cookie_flags", "review_security_headers", "validate_target"]
+def review_cors_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic CORS settings without making requests or exposing values."""
+    findings: list[Finding] = []
+    origin = str(settings.get("allow_origin", "")).strip()
+    credentials = settings.get("allow_credentials") is True
+
+    if not origin:
+        findings.append(Finding("cors-policy", "medium", "Allowed origin is missing", remediation="Set an explicit origin for the local lab"))
+    elif origin == "*" and credentials:
+        findings.append(Finding("cors-policy", "high", "Wildcard origin cannot be combined with credentials", remediation="Use an explicit trusted origin or disable credentials"))
+    elif origin == "*":
+        findings.append(Finding("cors-policy", "low", "Wildcard origin permits every browser origin", remediation="Prefer an explicit origin when the lab does not need public sharing"))
+
+    if credentials and origin in {"", "*"}:
+        findings.append(Finding("cors-policy", "medium", "Credentialed CORS requires a specific allowed origin"))
+    if not findings:
+        findings.append(Finding("cors-policy", "info", "Synthetic CORS settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_security_headers", "validate_target"]

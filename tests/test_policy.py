@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_authentication_policy, review_cookie_flags, review_security_headers, validate_target
+from mugin.core import PolicyError, review_authentication_policy, review_cookie_flags, review_cors_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -64,6 +64,18 @@ def test_authentication_policy_review_reports_weak_synthetic_settings_without_se
 
 def test_authentication_policy_review_accepts_baseline_settings():
     findings = review_authentication_policy({"minimum_password_length": 14, "mfa_required": True, "lockout_threshold": 5})
+    assert findings[0].severity == "info"
+
+
+def test_cors_policy_review_rejects_wildcard_with_credentials_without_network_access():
+    findings = review_cors_policy({"allow_origin": "*", "allow_credentials": True})
+    messages = " ".join(finding.message for finding in findings)
+    assert "Wildcard origin cannot be combined with credentials" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_cors_policy_review_accepts_explicit_origin():
+    findings = review_cors_policy({"allow_origin": "http://127.0.0.1:8080", "allow_credentials": True})
     assert findings[0].severity == "info"
 
 
