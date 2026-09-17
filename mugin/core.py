@@ -124,4 +124,22 @@ def review_cors_policy(settings: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_security_headers", "validate_target"]
+def review_csrf_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic CSRF controls without receiving tokens or making requests."""
+    findings: list[Finding] = []
+    protection_enabled = settings.get("csrf_protection_enabled") is True
+    origin_check_enabled = settings.get("origin_check_enabled") is True
+    same_site = str(settings.get("same_site", "")).strip().lower()
+
+    if not protection_enabled:
+        findings.append(Finding("csrf-policy", "high", "CSRF protection is not enabled", remediation="Require a server-side CSRF defense for state-changing lab actions"))
+    if not origin_check_enabled:
+        findings.append(Finding("csrf-policy", "medium", "Origin checking is not enabled", remediation="Validate the expected local origin for state-changing requests"))
+    if same_site not in {"strict", "lax"}:
+        findings.append(Finding("csrf-policy", "medium", "SameSite cookie setting is missing or not Strict/Lax", remediation="Use SameSite=Lax or Strict for session cookies in the lab"))
+    if not findings:
+        findings.append(Finding("csrf-policy", "info", "Synthetic CSRF settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_security_headers", "validate_target"]

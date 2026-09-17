@@ -30,3 +30,7 @@ This challenge reviews a small mapping of synthetic policy settings entirely off
 ## Daily challenge: CORS Policy Review
 
 This challenge reviews synthetic CORS settings entirely offline. It checks whether a wildcard origin is used, especially alongside credentialed requests, and recommends an explicit origin for a local lab. It makes no network requests, does not inspect browser traffic, and never accepts cookies, tokens, or credentials. Use placeholder values only and keep the lab isolated.
+
+## Daily challenge: CSRF Policy Review
+
+This challenge reviews only synthetic CSRF configuration values: whether server-side protection is enabled, whether expected-origin checking is enabled, and whether a session cookie uses `SameSite=Lax` or `SameSite=Strict`. It never accepts CSRF tokens, cookies, passwords, or session data, and it makes no network requests. Use placeholder settings from an isolated local lab; do not paste real request data or secrets.

@@ -13,6 +13,7 @@ CHALLENGES = [
     {"id": "web-003", "title": "Defensive Security Headers", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "auth-001", "title": "Authentication Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "web-004", "title": "CORS Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "web-005", "title": "CSRF Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 

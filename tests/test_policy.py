@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_authentication_policy, review_cookie_flags, review_cors_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -76,6 +76,20 @@ def test_cors_policy_review_rejects_wildcard_with_credentials_without_network_ac
 
 def test_cors_policy_review_accepts_explicit_origin():
     findings = review_cors_policy({"allow_origin": "http://127.0.0.1:8080", "allow_credentials": True})
+    assert findings[0].severity == "info"
+
+
+def test_csrf_policy_review_reports_weak_synthetic_settings_without_tokens():
+    findings = review_csrf_policy({"csrf_protection_enabled": False, "origin_check_enabled": False, "same_site": "None"})
+    messages = " ".join(finding.message for finding in findings)
+    assert "CSRF protection" in messages
+    assert "Origin checking" in messages
+    assert "SameSite" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_csrf_policy_review_accepts_baseline_settings():
+    findings = review_csrf_policy({"csrf_protection_enabled": True, "origin_check_enabled": True, "same_site": "Lax"})
     assert findings[0].severity == "info"
 
 
