@@ -142,4 +142,25 @@ def review_csrf_policy(settings: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_security_headers", "validate_target"]
+def review_audit_logging_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic audit-log settings without receiving log entries or secrets."""
+    findings: list[Finding] = []
+    enabled = settings.get("audit_logging_enabled") is True
+    retention_days = settings.get("retention_days")
+    excludes_secrets = settings.get("excludes_secrets") is True
+    local_sink = settings.get("local_sink") is True
+
+    if not enabled:
+        findings.append(Finding("audit-logging", "medium", "Audit logging is not enabled", remediation="Enable minimal audit events for the local lab"))
+    if not isinstance(retention_days, int) or not 1 <= retention_days <= 90:
+        findings.append(Finding("audit-logging", "low", "Retention period is missing or outside the 1-90 day range", remediation="Choose a bounded retention period appropriate for the lab"))
+    if not excludes_secrets:
+        findings.append(Finding("audit-logging", "high", "Audit records are not explicitly configured to exclude secrets", remediation="Exclude passwords, tokens, cookies, and authorization headers before writing events"))
+    if not local_sink:
+        findings.append(Finding("audit-logging", "medium", "Audit sink is not restricted to the local lab", remediation="Keep training records on an isolated local sink"))
+    if not findings:
+        findings.append(Finding("audit-logging", "info", "Synthetic audit-logging settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_security_headers", "validate_target"]

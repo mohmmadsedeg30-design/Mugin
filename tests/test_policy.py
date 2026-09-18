@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -90,6 +90,20 @@ def test_csrf_policy_review_reports_weak_synthetic_settings_without_tokens():
 
 def test_csrf_policy_review_accepts_baseline_settings():
     findings = review_csrf_policy({"csrf_protection_enabled": True, "origin_check_enabled": True, "same_site": "Lax"})
+    assert findings[0].severity == "info"
+
+
+def test_audit_logging_review_reports_secret_and_scope_risks_without_log_data():
+    findings = review_audit_logging_policy({"audit_logging_enabled": True, "retention_days": 120, "excludes_secrets": False, "local_sink": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "Retention" in messages
+    assert "exclude secrets" in messages
+    assert "local lab" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_audit_logging_review_accepts_bounded_secret_free_local_settings():
+    findings = review_audit_logging_policy({"audit_logging_enabled": True, "retention_days": 30, "excludes_secrets": True, "local_sink": True})
     assert findings[0].severity == "info"
 
 

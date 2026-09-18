@@ -34,3 +34,7 @@ This challenge reviews synthetic CORS settings entirely offline. It checks wheth
 ## Daily challenge: CSRF Policy Review
 
 This challenge reviews only synthetic CSRF configuration values: whether server-side protection is enabled, whether expected-origin checking is enabled, and whether a session cookie uses `SameSite=Lax` or `SameSite=Strict`. It never accepts CSRF tokens, cookies, passwords, or session data, and it makes no network requests. Use placeholder settings from an isolated local lab; do not paste real request data or secrets.
+
+## Daily challenge: Audit Logging Policy Review
+
+This challenge reviews only synthetic audit-logging settings: whether logging is enabled, whether retention is bounded, whether secrets are excluded, and whether the sink is local. It never accepts log entries, passwords, tokens, cookies, authorization headers, or network destinations, and it makes no network requests. Use placeholder settings from an isolated lab and keep any real operational logs out of the challenge.

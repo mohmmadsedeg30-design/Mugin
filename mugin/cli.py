@@ -14,6 +14,7 @@ CHALLENGES = [
     {"id": "auth-001", "title": "Authentication Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "web-004", "title": "CORS Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "web-005", "title": "CSRF Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "ops-001", "title": "Audit Logging Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 
