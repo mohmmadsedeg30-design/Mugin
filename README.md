@@ -12,7 +12,7 @@ Mugin is intentionally **not** a clone of `zphisher.sh` or any phishing toolkit.
 
 1. **Policy Gate:** Allows loopback, private, and link-local lab targets only, or an explicit allow-list.
 2. **Safe Checks:** Runs low-impact defensive checks in dry-run mode.
-3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging policy review.
+3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging and data-minimization policy reviews.
 4. **Offline Reviews:** Reviews supplied HTTP headers, cookie flags, synthetic authentication settings, CSRF settings, and audit-logging settings without making network requests or storing secrets.
 5. **Numbered English UI:** A simple ASCII-logo menu for local operation.
 6. **Restricted Telegram Adapter:** A skeleton only; it does not execute arbitrary commands or expose secrets.
@@ -38,6 +38,8 @@ python3 mugin.py
 The numbered menu includes challenges, policy information, local dry-run checks, local JSON reports, offline header review, Telegram adapter status, and the safety disclaimer.
 
 The authentication-policy challenge accepts only synthetic settings such as a minimum length, an MFA boolean, and a lockout threshold. It never accepts or processes passwords, tokens, or usernames.
+
+The data-minimization challenge accepts only synthetic booleans for minimized collection, PII redaction, and disabled external exports. It never accepts or processes personal records, identifiers, destinations, or secrets.
 
 Command-line examples:
 

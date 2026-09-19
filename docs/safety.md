@@ -38,3 +38,7 @@ This challenge reviews only synthetic CSRF configuration values: whether server-
 ## Daily challenge: Audit Logging Policy Review
 
 This challenge reviews only synthetic audit-logging settings: whether logging is enabled, whether retention is bounded, whether secrets are excluded, and whether the sink is local. It never accepts log entries, passwords, tokens, cookies, authorization headers, or network destinations, and it makes no network requests. Use placeholder settings from an isolated lab and keep any real operational logs out of the challenge.
+
+## Daily challenge: Data Minimization Policy Review
+
+This challenge reviews only synthetic privacy settings: whether collection is minimized, whether PII redaction is enabled, and whether external exports are disabled. It never accepts personal records, identifiers, log entries, destinations, passwords, tokens, or cookies, and it makes no network requests. Use boolean settings from an isolated lab and keep all real user data outside the challenge.

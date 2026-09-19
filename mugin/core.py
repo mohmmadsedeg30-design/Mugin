@@ -163,4 +163,22 @@ def review_audit_logging_policy(settings: Mapping[str, object]) -> list[Finding]
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_security_headers", "validate_target"]
+def review_data_minimization_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic data-minimization settings without receiving user data."""
+    findings: list[Finding] = []
+    minimized = settings.get("collection_minimized") is True
+    redaction_enabled = settings.get("pii_redaction_enabled") is True
+    exports_disabled = settings.get("external_exports_disabled") is True
+
+    if not minimized:
+        findings.append(Finding("data-minimization", "medium", "Data collection is not explicitly minimized", remediation="Collect only fields required for the local lab exercise"))
+    if not redaction_enabled:
+        findings.append(Finding("data-minimization", "high", "PII redaction is not enabled", remediation="Redact synthetic personal-data fields before local review or storage"))
+    if not exports_disabled:
+        findings.append(Finding("data-minimization", "medium", "External data exports are not disabled", remediation="Keep training data inside the isolated lab and disable external exports"))
+    if not findings:
+        findings.append(Finding("data-minimization", "info", "Synthetic data-minimization settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_security_headers", "validate_target"]
