@@ -181,4 +181,25 @@ def review_data_minimization_policy(settings: Mapping[str, object]) -> list[Find
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_security_headers", "validate_target"]
+def review_rate_limiting_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic rate-limit settings without receiving traffic or identifiers."""
+    findings: list[Finding] = []
+    enabled = settings.get("rate_limiting_enabled") is True
+    requests_per_minute = settings.get("requests_per_minute")
+    burst_limit = settings.get("burst_limit")
+    per_identity = settings.get("per_identity") is True
+
+    if not enabled:
+        findings.append(Finding("rate-limiting", "medium", "Rate limiting is not enabled", remediation="Enable bounded request limits for the local lab"))
+    if not isinstance(requests_per_minute, int) or not 1 <= requests_per_minute <= 600:
+        findings.append(Finding("rate-limiting", "medium", "Requests-per-minute limit is missing or outside the 1-600 range", remediation="Choose a bounded rate suitable for the exercise"))
+    if not isinstance(burst_limit, int) or not 1 <= burst_limit <= 60:
+        findings.append(Finding("rate-limiting", "low", "Burst limit is missing or outside the 1-60 range", remediation="Keep bursts bounded so short spikes cannot overwhelm the lab"))
+    if not per_identity:
+        findings.append(Finding("rate-limiting", "low", "Rate limits are not scoped to a synthetic client identity", remediation="Use a non-sensitive synthetic scope such as a lab client ID"))
+    if not findings:
+        findings.append(Finding("rate-limiting", "info", "Synthetic rate-limiting settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]

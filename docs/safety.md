@@ -42,3 +42,7 @@ This challenge reviews only synthetic audit-logging settings: whether logging is
 ## Daily challenge: Data Minimization Policy Review
 
 This challenge reviews only synthetic privacy settings: whether collection is minimized, whether PII redaction is enabled, and whether external exports are disabled. It never accepts personal records, identifiers, log entries, destinations, passwords, tokens, or cookies, and it makes no network requests. Use boolean settings from an isolated lab and keep all real user data outside the challenge.
+
+## Daily challenge: Rate-Limiting Policy Review
+
+This challenge reviews only synthetic rate-limiting settings: whether limits are enabled, whether requests per minute and burst size are bounded, and whether limits use a non-sensitive synthetic client scope. It never receives traffic, client identifiers, IP addresses, credentials, or network destinations, and it makes no network requests. Use placeholder numbers from an isolated local lab; this challenge does not generate load or attempt to evade a limit.

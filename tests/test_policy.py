@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_rate_limiting_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -118,6 +118,21 @@ def test_data_minimization_review_reports_collection_redaction_and_export_risks_
 
 def test_data_minimization_review_accepts_isolated_synthetic_settings():
     findings = review_data_minimization_policy({"collection_minimized": True, "pii_redaction_enabled": True, "external_exports_disabled": True})
+    assert findings[0].severity == "info"
+
+
+def test_rate_limiting_review_reports_unbounded_synthetic_settings_without_traffic():
+    findings = review_rate_limiting_policy({"rate_limiting_enabled": False, "requests_per_minute": 1000, "burst_limit": 100, "per_identity": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "not enabled" in messages
+    assert "1-600" in messages
+    assert "1-60" in messages
+    assert "synthetic client identity" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_rate_limiting_review_accepts_bounded_isolated_synthetic_settings():
+    findings = review_rate_limiting_policy({"rate_limiting_enabled": True, "requests_per_minute": 120, "burst_limit": 10, "per_identity": True})
     assert findings[0].severity == "info"
 
 
