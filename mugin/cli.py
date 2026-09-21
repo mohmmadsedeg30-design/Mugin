@@ -17,6 +17,7 @@ CHALLENGES = [
     {"id": "ops-001", "title": "Audit Logging Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "ops-002", "title": "Data Minimization Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "ops-003", "title": "Rate-Limiting Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "auth-002", "title": "Least-Privilege Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 

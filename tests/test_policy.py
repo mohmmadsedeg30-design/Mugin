@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_rate_limiting_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_least_privilege_policy, review_rate_limiting_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -133,6 +133,20 @@ def test_rate_limiting_review_reports_unbounded_synthetic_settings_without_traff
 
 def test_rate_limiting_review_accepts_bounded_isolated_synthetic_settings():
     findings = review_rate_limiting_policy({"rate_limiting_enabled": True, "requests_per_minute": 120, "burst_limit": 10, "per_identity": True})
+    assert findings[0].severity == "info"
+
+
+def test_least_privilege_review_reports_unsafe_synthetic_settings_without_identities():
+    findings = review_least_privilege_policy({"default_deny": False, "privileged_access_reviewed": False, "service_account_scope": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "default to deny" in messages
+    assert "Privileged access" in messages
+    assert "Service-account scope" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_least_privilege_review_accepts_bounded_synthetic_settings():
+    findings = review_least_privilege_policy({"default_deny": True, "privileged_access_reviewed": True, "service_account_scope": True})
     assert findings[0].severity == "info"
 
 

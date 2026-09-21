@@ -46,3 +46,7 @@ This challenge reviews only synthetic privacy settings: whether collection is mi
 ## Daily challenge: Rate-Limiting Policy Review
 
 This challenge reviews only synthetic rate-limiting settings: whether limits are enabled, whether requests per minute and burst size are bounded, and whether limits use a non-sensitive synthetic client scope. It never receives traffic, client identifiers, IP addresses, credentials, or network destinations, and it makes no network requests. Use placeholder numbers from an isolated local lab; this challenge does not generate load or attempt to evade a limit.
+
+## Daily challenge: Least-Privilege Policy Review
+
+This challenge reviews only synthetic authorization settings: whether access defaults to deny, whether privileged access is reviewed, and whether service-account scope is bounded. It never receives identities, role names, permission lists, credentials, access requests, or live authorization data, and it makes no network requests or authorization changes. Use booleans from an isolated local lab and keep real access-control records outside the challenge.

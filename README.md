@@ -12,7 +12,7 @@ Mugin is intentionally **not** a clone of `zphisher.sh` or any phishing toolkit.
 
 1. **Policy Gate:** Allows loopback, private, and link-local lab targets only, or an explicit allow-list.
 2. **Safe Checks:** Runs low-impact defensive checks in dry-run mode.
-3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging, data-minimization, and rate-limiting policy reviews.
+3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging, data-minimization, rate-limiting, and least-privilege policy reviews.
 4. **Offline Reviews:** Reviews supplied HTTP headers, cookie flags, synthetic authentication settings, CSRF settings, and audit-logging settings without making network requests or storing secrets.
 5. **Numbered English UI:** A simple ASCII-logo menu for local operation.
 6. **Restricted Telegram Adapter:** A skeleton only; it does not execute arbitrary commands or expose secrets.
@@ -42,6 +42,8 @@ The authentication-policy challenge accepts only synthetic settings such as a mi
 The data-minimization challenge accepts only synthetic booleans for minimized collection, PII redaction, and disabled external exports. It never accepts or processes personal records, identifiers, destinations, or secrets.
 
 The rate-limiting challenge accepts only synthetic settings for enabled limits, bounded request and burst values, and a synthetic client scope. It never accepts traffic, IP addresses, client identifiers, credentials, or destinations, and it never generates load.
+
+The least-privilege challenge accepts only synthetic authorization settings for default-deny behavior, privileged-access review, and bounded service-account scope. It never accepts identities, role names, permissions, credentials, or access requests, and it never changes authorization state.
 
 Command-line examples:
 

@@ -202,4 +202,22 @@ def review_rate_limiting_policy(settings: Mapping[str, object]) -> list[Finding]
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]
+def review_least_privilege_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic authorization settings without receiving identities or permissions."""
+    findings: list[Finding] = []
+    default_deny = settings.get("default_deny") is True
+    privileged_review = settings.get("privileged_access_reviewed") is True
+    service_scope = settings.get("service_account_scope") is True
+
+    if not default_deny:
+        findings.append(Finding("least-privilege", "high", "Authorization does not default to deny", remediation="Deny access unless a local lab rule explicitly grants it"))
+    if not privileged_review:
+        findings.append(Finding("least-privilege", "medium", "Privileged access is not periodically reviewed", remediation="Review synthetic privileged roles and remove unnecessary access"))
+    if not service_scope:
+        findings.append(Finding("least-privilege", "medium", "Service-account scope is not explicitly bounded", remediation="Limit each synthetic service role to the smallest required lab capability"))
+    if not findings:
+        findings.append(Finding("least-privilege", "info", "Synthetic least-privilege settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]
