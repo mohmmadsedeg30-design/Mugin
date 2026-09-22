@@ -220,4 +220,25 @@ def review_least_privilege_policy(settings: Mapping[str, object]) -> list[Findin
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]
+def review_backup_recovery_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic backup settings without receiving files or destinations."""
+    findings: list[Finding] = []
+    backups_enabled = settings.get("backups_enabled") is True
+    encrypted = settings.get("encrypted_at_rest") is True
+    restore_tested = settings.get("restore_tested") is True
+    local_only = settings.get("local_only") is True
+
+    if not backups_enabled:
+        findings.append(Finding("backup-recovery", "high", "Backups are not enabled", remediation="Enable bounded backups for synthetic lab state"))
+    if not encrypted:
+        findings.append(Finding("backup-recovery", "high", "Backups are not encrypted at rest", remediation="Encrypt local lab backups and protect the key separately"))
+    if not restore_tested:
+        findings.append(Finding("backup-recovery", "medium", "Backup restoration has not been tested", remediation="Run a local restore drill with synthetic data and record only the result"))
+    if not local_only:
+        findings.append(Finding("backup-recovery", "medium", "Backup storage is not restricted to the local lab", remediation="Keep training backups in an isolated local destination and disable external exports"))
+    if not findings:
+        findings.append(Finding("backup-recovery", "info", "Synthetic backup and recovery settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]

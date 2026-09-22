@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_least_privilege_policy, review_rate_limiting_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_least_privilege_policy, review_rate_limiting_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -147,6 +147,21 @@ def test_least_privilege_review_reports_unsafe_synthetic_settings_without_identi
 
 def test_least_privilege_review_accepts_bounded_synthetic_settings():
     findings = review_least_privilege_policy({"default_deny": True, "privileged_access_reviewed": True, "service_account_scope": True})
+    assert findings[0].severity == "info"
+
+
+def test_backup_recovery_review_reports_storage_and_restore_risks_without_files():
+    findings = review_backup_recovery_policy({"backups_enabled": False, "encrypted_at_rest": False, "restore_tested": False, "local_only": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "Backups are not enabled" in messages
+    assert "not encrypted" in messages
+    assert "not been tested" in messages
+    assert "local lab" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_backup_recovery_review_accepts_encrypted_local_synthetic_settings():
+    findings = review_backup_recovery_policy({"backups_enabled": True, "encrypted_at_rest": True, "restore_tested": True, "local_only": True})
     assert findings[0].severity == "info"
 
 

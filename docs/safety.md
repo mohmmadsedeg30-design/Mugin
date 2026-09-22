@@ -50,3 +50,7 @@ This challenge reviews only synthetic rate-limiting settings: whether limits are
 ## Daily challenge: Least-Privilege Policy Review
 
 This challenge reviews only synthetic authorization settings: whether access defaults to deny, whether privileged access is reviewed, and whether service-account scope is bounded. It never receives identities, role names, permission lists, credentials, access requests, or live authorization data, and it makes no network requests or authorization changes. Use booleans from an isolated local lab and keep real access-control records outside the challenge.
+
+## Daily challenge: Backup and Recovery Policy Review
+
+This challenge reviews only synthetic continuity settings: whether backups are enabled, encrypted at rest, restored in a local drill, and restricted to the isolated lab. It never receives files, backup archives, encryption keys, storage destinations, or recovery data, and it makes no network requests or restore operations. Use booleans from an isolated local lab and keep real backups and keys outside the challenge.
