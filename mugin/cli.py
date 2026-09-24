@@ -19,6 +19,7 @@ CHALLENGES = [
     {"id": "ops-003", "title": "Rate-Limiting Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "auth-002", "title": "Least-Privilege Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "ops-004", "title": "Backup and Recovery Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "config-002", "title": "Dependency Integrity Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 

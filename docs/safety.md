@@ -54,3 +54,7 @@ This challenge reviews only synthetic authorization settings: whether access def
 ## Daily challenge: Backup and Recovery Policy Review
 
 This challenge reviews only synthetic continuity settings: whether backups are enabled, encrypted at rest, restored in a local drill, and restricted to the isolated lab. It never receives files, backup archives, encryption keys, storage destinations, or recovery data, and it makes no network requests or restore operations. Use booleans from an isolated local lab and keep real backups and keys outside the challenge.
+
+## Daily challenge: Dependency Integrity Policy Review
+
+This challenge reviews only synthetic software-supply-chain settings: whether versions are locked, hashes are pinned, sources are restricted to trusted registries, and updates are reviewed. It never downloads, parses, installs, or executes packages; it makes no network requests and never accepts repository credentials, tokens, package files, or registry URLs. Use booleans from an isolated local lab and perform any real dependency review separately under the project's authorization and change-control process.

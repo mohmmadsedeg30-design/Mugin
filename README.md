@@ -47,6 +47,8 @@ The least-privilege challenge accepts only synthetic authorization settings for 
 
 The backup-recovery challenge accepts only synthetic booleans for enabled backups, encryption at rest, completed restore testing, and local-only storage. It never accepts files, archives, keys, destinations, or recovery data, and it never performs a restore or network export.
 
+The dependency-integrity challenge accepts only synthetic booleans for a lockfile, pinned hashes, trusted sources, and reviewed updates. It never downloads, parses, installs, or executes packages, and it never accepts registry URLs, credentials, tokens, or package files.
+
 Command-line examples:
 
 ```bash

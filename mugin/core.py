@@ -241,4 +241,25 @@ def review_backup_recovery_policy(settings: Mapping[str, object]) -> list[Findin
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]
+def review_dependency_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic dependency-integrity settings without downloading packages."""
+    findings: list[Finding] = []
+    lockfile_present = settings.get("lockfile_present") is True
+    hashes_pinned = settings.get("hashes_pinned") is True
+    trusted_sources_only = settings.get("trusted_sources_only") is True
+    updates_reviewed = settings.get("updates_reviewed") is True
+
+    if not lockfile_present:
+        findings.append(Finding("dependency-integrity", "medium", "Dependency versions are not locked", remediation="Commit a reviewed lockfile for the local lab"))
+    if not hashes_pinned:
+        findings.append(Finding("dependency-integrity", "medium", "Dependency hashes are not pinned", remediation="Pin hashes for reproducible, tamper-evident lab installs"))
+    if not trusted_sources_only:
+        findings.append(Finding("dependency-integrity", "high", "Dependency sources are not restricted to trusted registries", remediation="Use an approved registry and reject unexpected sources"))
+    if not updates_reviewed:
+        findings.append(Finding("dependency-integrity", "low", "Dependency updates have not been reviewed", remediation="Review changelogs and test updates before merging"))
+    if not findings:
+        findings.append(Finding("dependency-integrity", "info", "Synthetic dependency-integrity settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]
