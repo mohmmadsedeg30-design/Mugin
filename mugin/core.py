@@ -262,4 +262,25 @@ def review_dependency_policy(settings: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_security_headers", "validate_target"]
+def review_secret_management_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic secret-management settings without receiving secret material."""
+    findings: list[Finding] = []
+    scanning_enabled = settings.get("secret_scanning_enabled") is True
+    logs_redacted = settings.get("logs_redacted") is True
+    local_store_approved = settings.get("local_store_approved") is True
+    rotation_reviewed = settings.get("rotation_reviewed") is True
+
+    if not scanning_enabled:
+        findings.append(Finding("secret-management", "medium", "Secret scanning is not enabled", remediation="Enable repository checks that detect accidental secret commits without collecting secret values"))
+    if not logs_redacted:
+        findings.append(Finding("secret-management", "high", "Operational logs are not configured to redact secrets", remediation="Redact passwords, tokens, keys, and authorization headers before local logging"))
+    if not local_store_approved:
+        findings.append(Finding("secret-management", "high", "The secret store is not restricted to an approved local lab store", remediation="Use an authorized local secret store and prohibit external exports in the exercise"))
+    if not rotation_reviewed:
+        findings.append(Finding("secret-management", "low", "Secret rotation has not been reviewed", remediation="Document a bounded rotation and revocation drill using synthetic placeholders only"))
+    if not findings:
+        findings.append(Finding("secret-management", "info", "Synthetic secret-management settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "validate_target"]

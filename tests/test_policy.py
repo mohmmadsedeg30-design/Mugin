@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_least_privilege_policy, review_rate_limiting_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -177,6 +177,21 @@ def test_dependency_review_reports_integrity_and_source_risks_without_packages()
 
 def test_dependency_review_accepts_reproducible_synthetic_settings():
     findings = review_dependency_policy({"lockfile_present": True, "hashes_pinned": True, "trusted_sources_only": True, "updates_reviewed": True})
+    assert findings[0].severity == "info"
+
+
+def test_secret_management_review_reports_control_gaps_without_secret_material():
+    findings = review_secret_management_policy({"secret_scanning_enabled": False, "logs_redacted": False, "local_store_approved": False, "rotation_reviewed": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "Secret scanning" in messages
+    assert "redact secrets" in messages
+    assert "approved local lab store" in messages
+    assert "rotation" in messages.lower()
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_secret_management_review_accepts_synthetic_baseline_settings():
+    findings = review_secret_management_policy({"secret_scanning_enabled": True, "logs_redacted": True, "local_store_approved": True, "rotation_reviewed": True})
     assert findings[0].severity == "info"
 
 

@@ -58,3 +58,7 @@ This challenge reviews only synthetic continuity settings: whether backups are e
 ## Daily challenge: Dependency Integrity Policy Review
 
 This challenge reviews only synthetic software-supply-chain settings: whether versions are locked, hashes are pinned, sources are restricted to trusted registries, and updates are reviewed. It never downloads, parses, installs, or executes packages; it makes no network requests and never accepts repository credentials, tokens, package files, or registry URLs. Use booleans from an isolated local lab and perform any real dependency review separately under the project's authorization and change-control process.
+
+## Daily challenge: Secret Management Policy Review
+
+This challenge reviews only synthetic secret-management settings: whether secret scanning is enabled, logs are redacted, the store is restricted to an approved local lab store, and rotation is reviewed. It never accepts, compares, prints, stores, or transmits passwords, tokens, keys, cookies, authorization headers, or secret-store details. Use booleans and synthetic placeholders only; keep all real secrets outside the repository and the challenge.

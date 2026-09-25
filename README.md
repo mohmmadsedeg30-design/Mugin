@@ -17,6 +17,7 @@ Mugin is intentionally **not** a clone of `zphisher.sh` or any phishing toolkit.
 5. **Numbered English UI:** A simple ASCII-logo menu for local operation.
 6. **Restricted Telegram Adapter:** A skeleton only; it does not execute arbitrary commands or expose secrets.
 7. **Reports:** Creates local JSON reports for review.
+8. **Secret-Management Challenge:** Reviews synthetic scanning, redaction, local-store, and rotation settings without receiving secret material.
 
 ## Installation
 
@@ -48,6 +49,8 @@ The least-privilege challenge accepts only synthetic authorization settings for 
 The backup-recovery challenge accepts only synthetic booleans for enabled backups, encryption at rest, completed restore testing, and local-only storage. It never accepts files, archives, keys, destinations, or recovery data, and it never performs a restore or network export.
 
 The dependency-integrity challenge accepts only synthetic booleans for a lockfile, pinned hashes, trusted sources, and reviewed updates. It never downloads, parses, installs, or executes packages, and it never accepts registry URLs, credentials, tokens, or package files.
+
+The secret-management challenge accepts only synthetic booleans for secret scanning, log redaction, an approved local store, and rotation review. It never accepts or processes passwords, tokens, keys, cookies, authorization headers, secret-store details, or placeholders that resemble real credentials.
 
 Command-line examples:
 
