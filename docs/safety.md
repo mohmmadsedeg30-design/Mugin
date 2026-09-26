@@ -62,3 +62,7 @@ This challenge reviews only synthetic software-supply-chain settings: whether ve
 ## Daily challenge: Secret Management Policy Review
 
 This challenge reviews only synthetic secret-management settings: whether secret scanning is enabled, logs are redacted, the store is restricted to an approved local lab store, and rotation is reviewed. It never accepts, compares, prints, stores, or transmits passwords, tokens, keys, cookies, authorization headers, or secret-store details. Use booleans and synthetic placeholders only; keep all real secrets outside the repository and the challenge.
+
+## Daily challenge: Incident Response Readiness Policy Review
+
+This challenge reviews only synthetic incident-response settings: whether a response plan is documented, severity criteria are defined, exercise evidence stays local, and a tabletop drill has been tested. It never accepts incident records, logs, identities, destinations, credentials, or evidence files; it makes no network requests and never changes a live system. Use booleans from an isolated local lab and record only synthetic outcomes.

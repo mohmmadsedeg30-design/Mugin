@@ -283,4 +283,25 @@ def review_secret_management_policy(settings: Mapping[str, object]) -> list[Find
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "validate_target"]
+def review_incident_response_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic incident-response readiness without receiving incident data."""
+    findings: list[Finding] = []
+    plan_documented = settings.get("plan_documented") is True
+    severity_defined = settings.get("severity_defined") is True
+    local_evidence_only = settings.get("local_evidence_only") is True
+    tabletop_tested = settings.get("tabletop_tested") is True
+
+    if not plan_documented:
+        findings.append(Finding("incident-response", "medium", "Incident-response plan is not documented", remediation="Document a bounded response checklist for the isolated lab"))
+    if not severity_defined:
+        findings.append(Finding("incident-response", "low", "Incident severity criteria are not defined", remediation="Define synthetic severity levels and ownership before a lab exercise"))
+    if not local_evidence_only:
+        findings.append(Finding("incident-response", "high", "Response evidence is not restricted to the local lab", remediation="Keep only synthetic exercise notes in an isolated local destination"))
+    if not tabletop_tested:
+        findings.append(Finding("incident-response", "medium", "The response plan has not been tested in a tabletop exercise", remediation="Run a no-impact tabletop drill using synthetic events and record only outcomes"))
+    if not findings:
+        findings.append(Finding("incident-response", "info", "Synthetic incident-response settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "validate_target"]

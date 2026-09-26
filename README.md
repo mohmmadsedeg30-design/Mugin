@@ -12,7 +12,7 @@ Mugin is intentionally **not** a clone of `zphisher.sh` or any phishing toolkit.
 
 1. **Policy Gate:** Allows loopback, private, and link-local lab targets only, or an explicit allow-list.
 2. **Safe Checks:** Runs low-impact defensive checks in dry-run mode.
-3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging, data-minimization, rate-limiting, least-privilege, and backup-recovery policy reviews.
+3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging, data-minimization, rate-limiting, least-privilege, backup-recovery, and incident-response policy reviews.
 4. **Offline Reviews:** Reviews supplied HTTP headers, cookie flags, synthetic authentication settings, CSRF settings, and audit-logging settings without making network requests or storing secrets.
 5. **Numbered English UI:** A simple ASCII-logo menu for local operation.
 6. **Restricted Telegram Adapter:** A skeleton only; it does not execute arbitrary commands or expose secrets.
@@ -51,6 +51,8 @@ The backup-recovery challenge accepts only synthetic booleans for enabled backup
 The dependency-integrity challenge accepts only synthetic booleans for a lockfile, pinned hashes, trusted sources, and reviewed updates. It never downloads, parses, installs, or executes packages, and it never accepts registry URLs, credentials, tokens, or package files.
 
 The secret-management challenge accepts only synthetic booleans for secret scanning, log redaction, an approved local store, and rotation review. It never accepts or processes passwords, tokens, keys, cookies, authorization headers, secret-store details, or placeholders that resemble real credentials.
+
+The incident-response challenge accepts only synthetic booleans for a documented plan, defined severity criteria, local-only exercise evidence, and tabletop testing. It never accepts incident records, log entries, identities, destinations, credentials, or evidence files, and it never contacts or changes a live system.
 
 Command-line examples:
 

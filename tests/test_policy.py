@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -192,6 +192,21 @@ def test_secret_management_review_reports_control_gaps_without_secret_material()
 
 def test_secret_management_review_accepts_synthetic_baseline_settings():
     findings = review_secret_management_policy({"secret_scanning_enabled": True, "logs_redacted": True, "local_store_approved": True, "rotation_reviewed": True})
+    assert findings[0].severity == "info"
+
+
+def test_incident_response_review_reports_readiness_gaps_without_incident_data():
+    findings = review_incident_response_policy({"plan_documented": False, "severity_defined": False, "local_evidence_only": False, "tabletop_tested": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "not documented" in messages
+    assert "severity" in messages
+    assert "local lab" in messages
+    assert "tabletop" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_incident_response_review_accepts_synthetic_baseline_settings():
+    findings = review_incident_response_policy({"plan_documented": True, "severity_defined": True, "local_evidence_only": True, "tabletop_tested": True})
     assert findings[0].severity == "info"
 
 
