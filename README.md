@@ -54,6 +54,8 @@ The secret-management challenge accepts only synthetic booleans for secret scann
 
 The incident-response challenge accepts only synthetic booleans for a documented plan, defined severity criteria, local-only exercise evidence, and tabletop testing. It never accepts incident records, log entries, identities, destinations, credentials, or evidence files, and it never contacts or changes a live system.
 
+The change-control challenge accepts only synthetic booleans for required review, required tests, a rollback plan, and recorded approval. It never accepts change requests, identities, approvals, credentials, deployment targets, or repository metadata, and it never applies or transmits a change.
+
 Command-line examples:
 
 ```bash

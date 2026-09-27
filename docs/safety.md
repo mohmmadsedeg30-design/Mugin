@@ -66,3 +66,7 @@ This challenge reviews only synthetic secret-management settings: whether secret
 ## Daily challenge: Incident Response Readiness Policy Review
 
 This challenge reviews only synthetic incident-response settings: whether a response plan is documented, severity criteria are defined, exercise evidence stays local, and a tabletop drill has been tested. It never accepts incident records, logs, identities, destinations, credentials, or evidence files; it makes no network requests and never changes a live system. Use booleans from an isolated local lab and record only synthetic outcomes.
+
+## Daily challenge: Change Control Policy Review
+
+This challenge reviews only synthetic change-control settings: whether peer review and local tests are required, whether a rollback plan exists, and whether approval is recorded. It never accepts change requests, identities, approval records, deployment targets, repository metadata, credentials, or live state; it makes no network requests and never applies a change. Use booleans from an isolated local lab and record only synthetic outcomes.

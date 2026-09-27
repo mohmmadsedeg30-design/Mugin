@@ -304,4 +304,25 @@ def review_incident_response_policy(settings: Mapping[str, object]) -> list[Find
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "validate_target"]
+def review_change_control_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic change-control settings without changing live systems."""
+    findings: list[Finding] = []
+    review_required = settings.get("review_required") is True
+    tests_required = settings.get("tests_required") is True
+    rollback_planned = settings.get("rollback_planned") is True
+    approval_recorded = settings.get("approval_recorded") is True
+
+    if not review_required:
+        findings.append(Finding("change-control", "medium", "Changes are not required to undergo review", remediation="Require peer review before applying a lab change"))
+    if not tests_required:
+        findings.append(Finding("change-control", "medium", "Changes are not required to pass tests", remediation="Run local automated tests before merging or applying the change"))
+    if not rollback_planned:
+        findings.append(Finding("change-control", "high", "A rollback plan is not recorded", remediation="Document a bounded rollback procedure using synthetic lab state"))
+    if not approval_recorded:
+        findings.append(Finding("change-control", "low", "Change approval is not recorded", remediation="Record only the synthetic approval outcome and time in the local lab"))
+    if not findings:
+        findings.append(Finding("change-control", "info", "Synthetic change-control settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "validate_target"]

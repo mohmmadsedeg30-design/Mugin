@@ -22,6 +22,7 @@ CHALLENGES = [
     {"id": "config-002", "title": "Dependency Integrity Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "config-003", "title": "Secret Management Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "ops-005", "title": "Incident Response Readiness Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "ops-006", "title": "Change Control Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 

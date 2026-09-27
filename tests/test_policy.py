@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -207,6 +207,21 @@ def test_incident_response_review_reports_readiness_gaps_without_incident_data()
 
 def test_incident_response_review_accepts_synthetic_baseline_settings():
     findings = review_incident_response_policy({"plan_documented": True, "severity_defined": True, "local_evidence_only": True, "tabletop_tested": True})
+    assert findings[0].severity == "info"
+
+
+def test_change_control_review_reports_unsafe_synthetic_settings_without_change_data():
+    findings = review_change_control_policy({"review_required": False, "tests_required": False, "rollback_planned": False, "approval_recorded": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "review" in messages.lower()
+    assert "tests" in messages.lower()
+    assert "rollback" in messages.lower()
+    assert "approval" in messages.lower()
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_change_control_review_accepts_bounded_local_settings():
+    findings = review_change_control_policy({"review_required": True, "tests_required": True, "rollback_planned": True, "approval_recorded": True})
     assert findings[0].severity == "info"
 
 
