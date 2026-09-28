@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_threat_model_policy, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -222,6 +222,21 @@ def test_change_control_review_reports_unsafe_synthetic_settings_without_change_
 
 def test_change_control_review_accepts_bounded_local_settings():
     findings = review_change_control_policy({"review_required": True, "tests_required": True, "rollback_planned": True, "approval_recorded": True})
+    assert findings[0].severity == "info"
+
+
+def test_threat_model_review_reports_gaps_without_system_details():
+    findings = review_threat_model_policy({"assets_defined": False, "trust_boundaries_reviewed": False, "abuse_cases_documented": False, "mitigations_prioritized": False})
+    messages = " ".join(finding.message for finding in findings)
+    assert "assets" in messages
+    assert "Trust boundaries" in messages
+    assert "abuse cases" in messages
+    assert "Mitigations" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_threat_model_review_accepts_synthetic_baseline_settings():
+    findings = review_threat_model_policy({"assets_defined": True, "trust_boundaries_reviewed": True, "abuse_cases_documented": True, "mitigations_prioritized": True})
     assert findings[0].severity == "info"
 
 

@@ -325,4 +325,25 @@ def review_change_control_policy(settings: Mapping[str, object]) -> list[Finding
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "validate_target"]
+def review_threat_model_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic threat-modeling controls without receiving system details."""
+    findings: list[Finding] = []
+    assets_defined = settings.get("assets_defined") is True
+    boundaries_reviewed = settings.get("trust_boundaries_reviewed") is True
+    abuse_cases_documented = settings.get("abuse_cases_documented") is True
+    mitigations_prioritized = settings.get("mitigations_prioritized") is True
+
+    if not assets_defined:
+        findings.append(Finding("threat-model", "medium", "Lab assets and intended data flows are not defined", remediation="Use synthetic asset labels and document only the local exercise scope"))
+    if not boundaries_reviewed:
+        findings.append(Finding("threat-model", "medium", "Trust boundaries have not been reviewed", remediation="Mark boundaries between synthetic components before reviewing risks"))
+    if not abuse_cases_documented:
+        findings.append(Finding("threat-model", "low", "Synthetic abuse cases are not documented", remediation="Record harmless misuse scenarios without live targets, identities, or payloads"))
+    if not mitigations_prioritized:
+        findings.append(Finding("threat-model", "medium", "Mitigations are not prioritized", remediation="Rank defensive fixes by impact and effort, then test them locally"))
+    if not findings:
+        findings.append(Finding("threat-model", "info", "Synthetic threat-modeling settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_threat_model_policy", "validate_target"]

@@ -70,3 +70,7 @@ This challenge reviews only synthetic incident-response settings: whether a resp
 ## Daily challenge: Change Control Policy Review
 
 This challenge reviews only synthetic change-control settings: whether peer review and local tests are required, whether a rollback plan exists, and whether approval is recorded. It never accepts change requests, identities, approval records, deployment targets, repository metadata, credentials, or live state; it makes no network requests and never applies a change. Use booleans from an isolated local lab and record only synthetic outcomes.
+
+## Daily challenge: Threat Modeling Policy Review
+
+This challenge reviews only synthetic threat-modeling settings: whether lab assets are defined, trust boundaries are reviewed, harmless abuse cases are documented, and defensive mitigations are prioritized. It never accepts architecture diagrams, identities, targets, payloads, credentials, or vulnerability details; it makes no network requests and never probes or changes a system. Use booleans from an isolated local lab and record only synthetic outcomes.
