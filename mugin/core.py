@@ -325,6 +325,25 @@ def review_change_control_policy(settings: Mapping[str, object]) -> list[Finding
     return findings
 
 
+def review_input_validation_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic input-validation controls without receiving input data."""
+    findings: list[Finding] = []
+    schema_validation = settings.get("schema_validation_enabled") is True
+    bounds_checked = settings.get("bounds_checked") is True
+    allowlist_used = settings.get("allowlist_used") is True
+    safe_errors = settings.get("safe_error_messages") is True
+    if not schema_validation:
+        findings.append(Finding("input-validation", "high", "Schema validation is not enabled", remediation="Validate synthetic fields against an explicit local schema before processing"))
+    if not bounds_checked:
+        findings.append(Finding("input-validation", "medium", "Input bounds are not checked", remediation="Apply bounded length, size, and numeric-range checks in the lab"))
+    if not allowlist_used:
+        findings.append(Finding("input-validation", "medium", "Allow-list validation is not enabled", remediation="Prefer explicit permitted values or formats over permissive parsing"))
+    if not safe_errors:
+        findings.append(Finding("input-validation", "low", "Error messages are not configured to avoid internal details", remediation="Return generic local errors and keep stack traces out of user-facing responses"))
+    if not findings:
+        findings.append(Finding("input-validation", "info", "Synthetic input-validation settings meet the baseline guidance"))
+    return findings
+
 def review_threat_model_policy(settings: Mapping[str, object]) -> list[Finding]:
     """Review synthetic threat-modeling controls without receiving system details."""
     findings: list[Finding] = []
@@ -346,4 +365,4 @@ def review_threat_model_policy(settings: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_threat_model_policy", "validate_target"]
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_input_validation_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_threat_model_policy", "validate_target"]

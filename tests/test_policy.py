@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_threat_model_policy, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_input_validation_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_threat_model_policy, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -248,3 +248,28 @@ def test_numbered_ui_and_disclaimer_are_english_and_safe(capsys):
     assert "credential" in output.lower()
     assert "phishing" in output.lower()
     assert not any("\u0600" <= character <= "\u06ff" for character in output)
+
+
+def test_input_validation_review_reports_gaps_without_input_data():
+    findings = review_input_validation_policy({
+        "schema_validation_enabled": False,
+        "bounds_checked": False,
+        "allowlist_used": False,
+        "safe_error_messages": False,
+    })
+    messages = " ".join(finding.message for finding in findings)
+    assert "Schema validation" in messages
+    assert "bounds" in messages
+    assert "Allow-list" in messages
+    assert "Error messages" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_input_validation_review_accepts_bounded_synthetic_settings():
+    findings = review_input_validation_policy({
+        "schema_validation_enabled": True,
+        "bounds_checked": True,
+        "allowlist_used": True,
+        "safe_error_messages": True,
+    })
+    assert findings[0].severity == "info"

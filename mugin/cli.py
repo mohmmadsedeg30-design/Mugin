@@ -24,6 +24,7 @@ CHALLENGES = [
     {"id": "ops-005", "title": "Incident Response Readiness Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "ops-006", "title": "Change Control Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "design-001", "title": "Threat Modeling Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "input-001", "title": "Input Validation Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 
