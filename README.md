@@ -59,6 +59,8 @@ The change-control challenge accepts only synthetic booleans for required review
 The threat-modeling challenge accepts only synthetic booleans for defined assets, reviewed trust boundaries, documented harmless abuse cases, and prioritized mitigations. It never accepts architecture diagrams, identities, targets, payloads, credentials, or vulnerability details, and it never probes or changes a system.
 The input-validation challenge accepts only synthetic booleans for schema validation, bounded inputs, allow-list checks, and safe error messages. It never accepts input payloads, files, URLs, identities, credentials, or targets, and it never parses or executes user-supplied content.
 
+The secure-configuration challenge accepts only synthetic booleans for disabling debug mode, isolating administrative interfaces, removing default credentials, and minimizing verbose errors. It never reads live configuration, accepts credentials, changes an interface, or executes a command.
+
 Command-line examples:
 
 ```bash

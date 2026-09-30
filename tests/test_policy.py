@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_input_validation_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_threat_model_policy, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_input_validation_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_secure_configuration_policy, review_threat_model_policy, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -271,5 +271,30 @@ def test_input_validation_review_accepts_bounded_synthetic_settings():
         "bounds_checked": True,
         "allowlist_used": True,
         "safe_error_messages": True,
+    })
+    assert findings[0].severity == "info"
+
+
+def test_secure_configuration_review_reports_baseline_gaps_without_live_settings():
+    findings = review_secure_configuration_policy({
+        "debug_disabled": False,
+        "admin_interface_isolated": False,
+        "default_credentials_removed": False,
+        "verbose_errors_disabled": False,
+    })
+    messages = " ".join(finding.message for finding in findings)
+    assert "Debug mode" in messages
+    assert "Administrative interfaces" in messages
+    assert "Default credentials" in messages
+    assert "Verbose error" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_secure_configuration_review_accepts_synthetic_baseline_settings():
+    findings = review_secure_configuration_policy({
+        "debug_disabled": True,
+        "admin_interface_isolated": True,
+        "default_credentials_removed": True,
+        "verbose_errors_disabled": True,
     })
     assert findings[0].severity == "info"

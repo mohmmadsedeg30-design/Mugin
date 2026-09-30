@@ -76,4 +76,9 @@ This challenge reviews only synthetic change-control settings: whether peer revi
 This challenge reviews only synthetic threat-modeling settings: whether lab assets are defined, trust boundaries are reviewed, harmless abuse cases are documented, and defensive mitigations are prioritized. It never accepts architecture diagrams, identities, targets, payloads, credentials, or vulnerability details; it makes no network requests and never probes or changes a system. Use booleans from an isolated local lab and record only synthetic outcomes.
 
 ## Daily challenge: Input Validation Policy Review
+
 This challenge reviews only synthetic input-validation settings: whether an explicit schema is used, input bounds are checked, permitted values are allow-listed, and user-facing errors avoid internal details. It never accepts input payloads, files, URLs, identities, credentials, or targets; it makes no network requests and never parses or executes user-supplied content. Use booleans from an isolated local lab and keep real application data outside the challenge.
+
+## Daily challenge: Secure Configuration Baseline Review
+
+This challenge reviews only four synthetic booleans: whether debug mode is disabled, administrative interfaces are isolated, default credentials are removed, and verbose errors are disabled. It never reads live configuration, accepts credentials, inspects administrative routes, executes commands, or applies changes. Use placeholder settings from an isolated local lab and keep all real configuration and secrets outside the challenge.

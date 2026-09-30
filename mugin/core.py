@@ -365,4 +365,25 @@ def review_threat_model_policy(settings: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_input_validation_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_threat_model_policy", "validate_target"]
+def review_secure_configuration_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic secure-configuration controls without reading live settings."""
+    findings: list[Finding] = []
+    debug_disabled = settings.get("debug_disabled") is True
+    admin_isolated = settings.get("admin_interface_isolated") is True
+    defaults_removed = settings.get("default_credentials_removed") is True
+    errors_minimized = settings.get("verbose_errors_disabled") is True
+
+    if not debug_disabled:
+        findings.append(Finding("secure-configuration", "medium", "Debug mode is not explicitly disabled", remediation="Disable debug features in the local lab baseline"))
+    if not admin_isolated:
+        findings.append(Finding("secure-configuration", "high", "Administrative interfaces are not isolated", remediation="Restrict synthetic administrative paths to the isolated lab scope"))
+    if not defaults_removed:
+        findings.append(Finding("secure-configuration", "high", "Default credentials are not explicitly removed", remediation="Replace or disable synthetic default access before the lab exercise"))
+    if not errors_minimized:
+        findings.append(Finding("secure-configuration", "low", "Verbose error details are not disabled", remediation="Return generic errors and keep diagnostic details in local protected logs"))
+    if not findings:
+        findings.append(Finding("secure-configuration", "info", "Synthetic secure-configuration settings meet the baseline guidance"))
+    return findings
+
+
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_input_validation_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_secure_configuration_policy", "review_threat_model_policy", "validate_target"]
