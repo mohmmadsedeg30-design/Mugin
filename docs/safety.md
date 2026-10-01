@@ -82,3 +82,7 @@ This challenge reviews only synthetic input-validation settings: whether an expl
 ## Daily challenge: Secure Configuration Baseline Review
 
 This challenge reviews only four synthetic booleans: whether debug mode is disabled, administrative interfaces are isolated, default credentials are removed, and verbose errors are disabled. It never reads live configuration, accepts credentials, inspects administrative routes, executes commands, or applies changes. Use placeholder settings from an isolated local lab and keep all real configuration and secrets outside the challenge.
+
+## Daily challenge: Session Management Policy Review
+
+This challenge reviews only synthetic session controls: whether an idle timeout is bounded, session identifiers rotate after authentication, logout invalidates the session, and HTTPS is required. It never accepts session IDs, cookies, tokens, passwords, usernames, live requests, or destinations; it makes no network requests and never changes session state. Use booleans and placeholder numbers from an isolated local lab only.

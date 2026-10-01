@@ -26,6 +26,7 @@ CHALLENGES = [
     {"id": "design-001", "title": "Threat Modeling Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "input-001", "title": "Input Validation Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
     {"id": "config-004", "title": "Secure Configuration Baseline Review", "level": "beginner", "scope": "local", "mode": "offline"},
+    {"id": "auth-003", "title": "Session Management Policy Review", "level": "beginner", "scope": "local", "mode": "offline"},
 ]
 
 

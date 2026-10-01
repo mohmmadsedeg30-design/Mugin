@@ -61,6 +61,8 @@ The input-validation challenge accepts only synthetic booleans for schema valida
 
 The secure-configuration challenge accepts only synthetic booleans for disabling debug mode, isolating administrative interfaces, removing default credentials, and minimizing verbose errors. It never reads live configuration, accepts credentials, changes an interface, or executes a command.
 
+The session-management challenge accepts only synthetic settings for a bounded idle timeout, identifier rotation, logout invalidation, and HTTPS-only sessions. It never accepts session IDs, cookies, tokens, credentials, or live requests, and it does not modify session state.
+
 Command-line examples:
 
 ```bash

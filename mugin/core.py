@@ -365,6 +365,27 @@ def review_threat_model_policy(settings: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
+def review_session_management_policy(settings: Mapping[str, object]) -> list[Finding]:
+    """Review synthetic session controls without receiving identifiers or tokens."""
+    findings: list[Finding] = []
+    timeout_minutes = settings.get("idle_timeout_minutes")
+    identifier_rotation = settings.get("identifier_rotation_enabled") is True
+    logout_invalidation = settings.get("logout_invalidation_enabled") is True
+    secure_transport = settings.get("secure_transport_required") is True
+
+    if not isinstance(timeout_minutes, int) or not 5 <= timeout_minutes <= 60:
+        findings.append(Finding("session-management", "medium", "Idle session timeout is missing or outside the 5-60 minute range", remediation="Use a bounded idle timeout appropriate for the isolated lab"))
+    if not identifier_rotation:
+        findings.append(Finding("session-management", "high", "Session identifiers are not rotated after authentication", remediation="Rotate synthetic session identifiers after login and privilege changes"))
+    if not logout_invalidation:
+        findings.append(Finding("session-management", "high", "Logout does not explicitly invalidate the session", remediation="Invalidate the synthetic session server-side when the learner logs out"))
+    if not secure_transport:
+        findings.append(Finding("session-management", "medium", "Secure transport is not required for sessions", remediation="Require HTTPS for session cookies and authenticated lab flows"))
+    if not findings:
+        findings.append(Finding("session-management", "info", "Synthetic session-management settings meet the baseline guidance"))
+    return findings
+
+
 def review_secure_configuration_policy(settings: Mapping[str, object]) -> list[Finding]:
     """Review synthetic secure-configuration controls without reading live settings."""
     findings: list[Finding] = []
@@ -386,4 +407,4 @@ def review_secure_configuration_policy(settings: Mapping[str, object]) -> list[F
     return findings
 
 
-__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_input_validation_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_secure_configuration_policy", "review_threat_model_policy", "validate_target"]
+__all__ = ["Finding", "PolicyError", "policy_summary", "review_audit_logging_policy", "review_authentication_policy", "review_backup_recovery_policy", "review_change_control_policy", "review_cookie_flags", "review_cors_policy", "review_csrf_policy", "review_data_minimization_policy", "review_dependency_policy", "review_incident_response_policy", "review_input_validation_policy", "review_least_privilege_policy", "review_rate_limiting_policy", "review_secret_management_policy", "review_security_headers", "review_secure_configuration_policy", "review_session_management_policy", "review_threat_model_policy", "validate_target"]

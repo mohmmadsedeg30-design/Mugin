@@ -1,6 +1,6 @@
 import pytest
 
-from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_input_validation_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_secure_configuration_policy, review_threat_model_policy, validate_target
+from mugin.core import PolicyError, review_audit_logging_policy, review_authentication_policy, review_backup_recovery_policy, review_change_control_policy, review_cookie_flags, review_cors_policy, review_csrf_policy, review_data_minimization_policy, review_dependency_policy, review_incident_response_policy, review_input_validation_policy, review_least_privilege_policy, review_rate_limiting_policy, review_secret_management_policy, review_security_headers, review_secure_configuration_policy, review_session_management_policy, review_threat_model_policy, validate_target
 from mugin.menu import BANNER, MENU_OPTIONS, print_disclaimer
 
 
@@ -296,5 +296,30 @@ def test_secure_configuration_review_accepts_synthetic_baseline_settings():
         "admin_interface_isolated": True,
         "default_credentials_removed": True,
         "verbose_errors_disabled": True,
+    })
+    assert findings[0].severity == "info"
+
+
+def test_session_management_review_reports_gaps_without_session_data():
+    findings = review_session_management_policy({
+        "idle_timeout_minutes": 120,
+        "identifier_rotation_enabled": False,
+        "logout_invalidation_enabled": False,
+        "secure_transport_required": False,
+    })
+    messages = " ".join(finding.message for finding in findings)
+    assert "5-60" in messages
+    assert "rotated" in messages
+    assert "invalidate" in messages
+    assert "Secure transport" in messages
+    assert all(finding.evidence == "" for finding in findings)
+
+
+def test_session_management_review_accepts_bounded_synthetic_settings():
+    findings = review_session_management_policy({
+        "idle_timeout_minutes": 15,
+        "identifier_rotation_enabled": True,
+        "logout_invalidation_enabled": True,
+        "secure_transport_required": True,
     })
     assert findings[0].severity == "info"
