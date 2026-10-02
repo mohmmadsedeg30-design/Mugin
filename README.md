@@ -10,7 +10,7 @@ Mugin is intentionally **not** a clone of `zphisher.sh` or any phishing toolkit.
 
 ## Features
 
-1. **Policy Gate:** Allows loopback, private, and link-local lab targets only, or an explicit allow-list.
+1. **Policy Gate:** Allows loopback, private, and link-local lab targets only, or an explicit allow-list. Target URLs containing embedded usernames or passwords are rejected to prevent accidental credential exposure.
 2. **Safe Checks:** Runs low-impact defensive checks in dry-run mode.
 3. **Challenge Catalog:** Provides local educational challenges with documented scope, including secret-free audit-logging, data-minimization, rate-limiting, least-privilege, backup-recovery, and incident-response policy reviews.
 4. **Offline Reviews:** Reviews supplied HTTP headers, cookie flags, synthetic authentication settings, CSRF settings, and audit-logging settings without making network requests or storing secrets.

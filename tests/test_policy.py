@@ -22,6 +22,11 @@ def test_invalid_scheme_rejected():
         validate_target("ftp://127.0.0.1")
 
 
+def test_embedded_credentials_rejected_even_for_local_target():
+    with pytest.raises(PolicyError, match="embedded credentials"):
+        validate_target("https://training:placeholder@127.0.0.1:8080")
+
+
 def test_security_header_review_is_offline_and_finds_missing_headers():
     findings = review_security_headers({"Server": "training-lab"})
     assert any("content-security-policy" in finding.message for finding in findings)

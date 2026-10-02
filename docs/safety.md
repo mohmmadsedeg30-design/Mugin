@@ -8,12 +8,17 @@
 6. Operations should record the operator, target, time, and result without storing secrets.
 7. Every daily improvement must be documented, tested, and reviewed before merging.
 8. If a real vulnerability is discovered, stop testing and follow coordinated disclosure with the system owner.
+9. Target URLs must not contain embedded usernames, passwords, tokens, or API keys, including for loopback or private lab hosts.
 
 ## Disclaimer
 
 Mugin is an educational defensive tool. It is not a phishing toolkit and is not intended to reproduce `zphisher.sh` or any credential-harvesting workflow. The project deliberately excludes deceptive login pages, credential collection, authentication bypass, malware, persistence, stealth, public targeting, and destructive actions.
 
 The operator is solely responsible for obtaining authorization, isolating the lab, protecting test data, and complying with applicable law. No feature in this repository grants permission to test a third-party system.
+
+## Daily improvement: Credential-Free Target URLs
+
+The scope gate rejects HTTP/HTTPS target URLs with embedded userinfo before any lab-host decision is made. This prevents accidental credential exposure in command history, reports, or diagnostics while preserving local-only scope enforcement. Use only credential-free URLs such as `http://127.0.0.1:8080` and keep synthetic access configuration separate. The check is local, deterministic, and makes no network requests.
 
 ## Daily challenge: Defensive Security Headers
 

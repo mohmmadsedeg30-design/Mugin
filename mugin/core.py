@@ -24,6 +24,8 @@ def validate_target(target: str, allowed_hosts: set[str] | None = None) -> str:
     parsed = urlparse(target)
     if parsed.scheme not in {"http", "https"} or not parsed.hostname:
         raise PolicyError("Target must be a valid HTTP/HTTPS URL")
+    if parsed.username is not None or parsed.password is not None:
+        raise PolicyError("Target URL must not contain embedded credentials")
     host = parsed.hostname.lower()
     allowed_hosts = {h.lower() for h in (allowed_hosts or set())}
     try:
